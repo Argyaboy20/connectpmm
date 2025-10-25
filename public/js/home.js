@@ -669,7 +669,7 @@ class SidebarManager {
                         window.location.href = '/profil';
                         break;
                     case 'Lainnya':
-                        this.showAlert('Menu Lainnya', 'Fitur akan tersedia setelah database terhubung.');
+                        window.location.href = '/setting';
                         break;
                     default:
                         this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');

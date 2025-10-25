@@ -81,9 +81,18 @@
                             username_demo
                         @endif
                     </h2>
-                    <button class="edit-profile-btn">Edit Profil</button>
-                    <button class="settings-btn">
+                    <!-- Mobile Settings Button - next to username -->
+                    <button class="settings-icon-btn" id="settingsIconBtn">
                         <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                
+                <!-- Action Buttons - below username, above stats -->
+                <div class="profile-actions">
+                    <button class="follow-btn" id="followBtn" data-following="false">Ikuti</button>
+                    <button class="message-btn" id="messageBtn">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Pesan</span>
                     </button>
                 </div>
                 

@@ -4,6 +4,9 @@ class ProfileManager {
         this.leftSidebar = document.getElementById('leftSidebar');
         this.mainContent = document.getElementById('mainContent');
         this.leftToggle = document.getElementById('leftToggle');
+        this.followBtn = document.getElementById('followBtn');
+        this.messageBtn = document.getElementById('messageBtn');
+        this.settingsIconBtn = document.getElementById('settingsIconBtn');
 
         this.init();
     }
@@ -14,6 +17,9 @@ class ProfileManager {
         this.setupMenuItems();
         this.setupProfileTabs();
         this.setupSortFilters();
+        this.setupFollowButton();
+        this.setupMessageButton();
+        this.setupSettingsButton();
         this.loadMockContent();
         this.handleResponsive();
         this.handleTabletView();
@@ -74,7 +80,7 @@ class ProfileManager {
                 } else if (menuText === 'Buat') {
                     window.location.href = '/home?menu=buat';
                 } else if (menuText === 'Lainnya') {
-                    this.showAlert('Menu Lainnya', 'Fitur akan tersedia setelah database terhubung.');
+                    window.location.href = '/setting';
                 } else {
                     // Fallback untuk menu yang tidak dikenali
                     this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
@@ -115,6 +121,57 @@ class ProfileManager {
             });
         });
     }
+
+    /* Setup follow button functionality */
+    setupFollowButton() {
+        if (!this.followBtn) return;
+        
+        this.followBtn.addEventListener('click', () => {
+            this.toggleFollow();
+        });
+    }
+
+    /* Toggle follow/unfollow state */
+    toggleFollow() {
+        const isFollowing = this.followBtn.getAttribute('data-following') === 'true';
+        
+        if (isFollowing) {
+            // Unfollow
+            this.followBtn.setAttribute('data-following', 'false');
+            this.followBtn.textContent = 'Ikuti';
+            console.log('Unfollowed user');
+            // TODO: Call API to unfollow when database is connected
+        } else {
+            // Follow
+            this.followBtn.setAttribute('data-following', 'true');
+            this.followBtn.textContent = 'Mengikuti';
+            console.log('Followed user');
+            // TODO: Call API to follow when database is connected
+        }
+    }
+
+    /* Setup message button functionality */
+    setupMessageButton() {
+        if (!this.messageBtn) return;
+        
+        this.messageBtn.addEventListener('click', () => {
+            console.log('Message button clicked');
+            // Navigate to message page with user context
+            window.location.href = '/home?menu=pesan';
+            // TODO: Open direct message when database is connected
+        });
+    }
+
+    /* Setup settings icon button (mobile) */
+    setupSettingsButton() {
+        if (!this.settingsIconBtn) return;
+        
+        this.settingsIconBtn.addEventListener('click', () => {
+            console.log('Settings icon clicked');
+            window.location.href = '/setting';
+        });
+    }
+
 
     /* Sort content based on type and order */
     sortContent(tabType, sortOrder) {
