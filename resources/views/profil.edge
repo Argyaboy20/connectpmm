@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - PMM Connect</title>
+    <link rel="icon" type="image/png" href="/image/logoputih.png">
+    {{ style('profil') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Left Sidebar -->
+    <nav class="sidebar left-sidebar collapsed" id="leftSidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img class="logopmm" src="/image/logopmm.png" alt="Logo PMM Connect">
+                <span class="logo-text">PMM Connect</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul class="menu-list">
+                <li class="menu-item" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span class="menu-text">Beranda</span>
+                </li>
+                <li class="menu-item" data-page="search">
+                    <i class="fas fa-search"></i>
+                    <span class="menu-text">Pencarian</span>
+                </li>
+                <li class="menu-item" data-page="message">
+                    <i class="fas fa-envelope"></i>
+                    <span class="menu-text">Pesan</span>
+                </li>
+                <li class="menu-item" data-page="notification">
+                    <i class="fas fa-bell"></i>
+                    <span class="menu-text">Notifikasi</span>
+                </li>
+                <li class="menu-item" data-page="create">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="menu-text">Buat</span>
+                </li>
+                <li class="menu-item active" data-page="profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="menu-text">Profil</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="menu-item" data-page="more">
+                <i class="fas fa-bars"></i>
+                <span class="menu-text">Lainnya</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Left Sidebar Toggle Button -->
+    <button class="sidebar-toggle left-toggle" id="leftToggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                @if(user && user.avatar)
+                    <img src="{{ user.avatar }}" alt="{{ user.name }}">
+                @else
+                    <i class="fas fa-user-circle"></i>
+                @endif
+            </div>
+            
+            <div class="profile-info">
+                <div class="profile-top">
+                    <h2 class="profile-username">
+                        @if(user && user.username)
+                            {{ user.username }}
+                        @else
+                            username_demo
+                        @endif
+                    </h2>
+                    <button class="edit-profile-btn">Edit Profil</button>
+                    <button class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-count">0</span>
+                        <span class="stat-label">post</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-count">0</span>
+                        <span class="stat-label">pengikut</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-count">0</span>
+                        <span class="stat-label">mengikuti</span>
+                    </div>
+                </div>
+                
+                <div class="profile-bio">
+                    <h3 class="profile-name">
+                        @if(user && user.name)
+                            {{ user.name }}
+                        @else
+                            Nama Pengguna
+                        @endif
+                    </h3>
+                    <p class="bio-text">Bio belum diatur</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="profile-tabs">
+            <button class="profile-tab active" data-tab="post">
+                <i class="fas fa-th"></i>
+                <span>POST</span>
+            </button>
+            <button class="profile-tab" data-tab="conex">
+                <i class="fas fa-comment"></i>
+                <span>CONNEX</span>
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="profile-content">
+            <!-- Post Tab -->
+            <div class="tab-content active" id="postContent">
+                <!-- Sort Filters -->
+                <div class="sort-filters">
+                    <button class="sort-btn active" data-sort="newest" data-tab="post">
+                        <i class="fas fa-clock"></i> Terkini
+                    </button>
+                    <button class="sort-btn" data-sort="oldest" data-tab="post">
+                        <i class="fas fa-history"></i> Terlama
+                    </button>
+                </div>
+
+                <!-- Post Grid -->
+                <div class="post-grid" id="postGrid">
+                    <!-- Posts will be dynamically loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="content-placeholder" id="postEmpty">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Belum Ada Post</h3>
+                    <p>Bagikan momen pertama Anda</p>
+                </div>
+            </div>
+
+            <!-- Conex Tab -->
+            <div class="tab-content" id="conexContent">
+                <!-- Sort Filters -->
+                <div class="sort-filters">
+                    <button class="sort-btn active" data-sort="newest" data-tab="conex">
+                        <i class="fas fa-clock"></i> Terkini
+                    </button>
+                    <button class="sort-btn" data-sort="oldest" data-tab="conex">
+                        <i class="fas fa-history"></i> Terlama
+                    </button>
+                </div>
+
+                <!-- Conex Feed -->
+                <div class="conex-feed" id="conexFeed">
+                    <!-- Conex posts will be dynamically loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="content-placeholder" id="conexEmpty">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Belum Ada Connex</h3>
+                    <p>Mulai berbagi cerita Anda</p>
+                </div>
+            </div>
+</div>
+    </main>
+
+    <!-- Hidden CSRF Token -->
+    <meta name="csrf-token" content="{{ csrfToken }}">
+
+    <!-- JavaScript -->
+    <script src="/js/profil.js"></script>
+</body>
+</html>

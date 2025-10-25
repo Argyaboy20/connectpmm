@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar - PMM Connect</title>
+  <link rel="icon" type="image/png" href="/image/logoputih.png">
+  {{ style('signup') }}
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-header">
+      <div class="logo-container">
+        <img class="logo" src="/image/logopmm.png" alt="Logo PMM Connect"></img>
+        <h1>PMM Connect</h1>
+      </div>
+      <p class="subtitle">Bergabunglah dengan komunitas PMM Connect</p>
+    </div>
+
+    <div class="signup-form-container">
+      <div class="tab-container">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="peserta">Peserta</button>
+          <button class="tab-button" data-tab="koordinator">Koordinator</button>
+          <button class="tab-button" data-tab="umum">Umum</button>
+        </div>
+
+        <!-- Tab Peserta -->
+        <div class="tab-content active" id="peserta">
+          <form class="signup-form" action="/signup" method="POST">
+            {{ csrfField() }}
+            <input type="hidden" name="userType" value="peserta">
+            
+            <div class="form-group">
+              <label for="pt-pengirim-peserta">PT Pengirim</label>
+              <div class="select-container">
+                <select id="pt-pengirim-peserta" name="ptPengirim" required>
+                  <option value="">Pilih PT Pengirim</option>
+                </select>
+                <input type="text" id="pt-pengirim-custom-peserta" name="ptPengirimCustom" placeholder="Atau ketik nama PT" style="display: none;">
+              </div>
+              <button type="button" class="toggle-input" data-target="pt-pengirim">Tidak ada dalam daftar?</button>
+            </div>
+
+            <div class="form-group">
+              <label for="pt-penerima-peserta">PT Penerima</label>
+              <div class="select-container">
+                <select id="pt-penerima-peserta" name="ptPenerima" required>
+                  <option value="">Pilih PT Penerima</option>
+                </select>
+                <input type="text" id="pt-penerima-custom-peserta" name="ptPenerimaCustom" placeholder="Atau ketik nama PT" style="display: none;">
+              </div>
+              <button type="button" class="toggle-input" data-target="pt-penerima">Tidak ada dalam daftar?</button>
+            </div>
+
+            <div class="form-group">
+              <label for="nim">NIM</label>
+              <input type="text" id="nim" name="nim" placeholder="Masukkan NIM" required>
+            </div>
+
+            <div class="form-group">
+              <label for="nama-peserta">Nama Peserta</label>
+              <input type="text" id="nama-peserta" name="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password-peserta">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-peserta" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-peserta">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+              <div class="password-requirements">
+                <div class="requirement" data-requirement="length"> Minimal 6 karakter</div>
+                <div class="requirement" data-requirement="uppercase"> Mengandung huruf kapital</div>
+                <div class="requirement" data-requirement="lowercase"> Mengandung huruf kecil</div>
+                <div class="requirement" data-requirement="number"> Mengandung angka</div>
+                <div class="requirement" data-requirement="special"> Mengandung karakter khusus</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-daftar">Daftar</button>
+          </form>
+        </div>
+
+        <!-- Tab Koordinator -->
+        <div class="tab-content" id="koordinator">
+          <form class="signup-form" action="/signup" method="POST">
+            {{ csrfField() }}
+            <input type="hidden" name="userType" value="koordinator">
+            
+            <div class="form-group">
+              <label for="status-koordinator">Status Koordinator</label>
+              <select id="status-koordinator" name="statusKoordinator" required>
+                <option value="">Pilih Status</option>
+                <option value="pengirim">PT Pengirim</option>
+                <option value="penerima">PT Penerima</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="pt-koordinator-group" style="display: none;">
+              <label id="pt-koordinator-label">PT</label>
+              <div class="select-container">
+                <select id="pt-koordinator" name="ptKoordinator" required>
+                  <option value="">Pilih PT</option>
+                </select>
+                <input type="text" id="pt-koordinator-custom" name="ptKoordinatorCustom" placeholder="Atau ketik nama PT" style="display: none;">
+              </div>
+              <button type="button" class="toggle-input" data-target="pt-koordinator">Tidak ada dalam daftar?</button>
+            </div>
+
+            <div class="form-group">
+              <label for="nidn">NIDN</label>
+              <input type="text" id="nidn" name="nidn" placeholder="Masukkan NIDN" required>
+            </div>
+
+            <div class="form-group">
+              <label for="nama-koordinator">Nama Koordinator</label>
+              <input type="text" id="nama-koordinator" name="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password-koordinator">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-koordinator" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-koordinator">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+              <div class="password-requirements">
+                <div class="requirement" data-requirement="length"> Minimal 6 karakter</div>
+                <div class="requirement" data-requirement="uppercase"> Mengandung huruf kapital</div>
+                <div class="requirement" data-requirement="lowercase"> Mengandung huruf kecil</div>
+                <div class="requirement" data-requirement="number"> Mengandung angka</div>
+                <div class="requirement" data-requirement="special"> Mengandung karakter khusus</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-daftar">Daftar</button>
+          </form>
+        </div>
+
+        <!-- Tab Umum -->
+        <div class="tab-content" id="umum">
+          <form class="signup-form" action="/signup" method="POST">
+            {{ csrfField() }}
+            <input type="hidden" name="userType" value="umum">
+            
+            <div class="form-group">
+              <label for="nama-umum">Nama Lengkap</label>
+              <input type="text" id="nama-umum" name="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password-umum">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-umum" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-umum">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+              <div class="password-requirements">
+                <div class="requirement" data-requirement="length"> Minimal 6 karakter</div>
+                <div class="requirement" data-requirement="uppercase"> Mengandung huruf kapital</div>
+                <div class="requirement" data-requirement="lowercase"> Mengandung huruf kecil</div>
+                <div class="requirement" data-requirement="number"> Mengandung angka</div>
+                <div class="requirement" data-requirement="special"> Mengandung karakter khusus</div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-daftar">Daftar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="signup-footer">
+      <p>Sudah punya akun? <a href="/signin">Masuk di sini</a></p>
+    </div>
+  </div>
+
+  <script src="/js/signup.js"></script>
+</body>
+</html>

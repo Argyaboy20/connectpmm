@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - PMM Connect</title>
+    <link rel="icon" type="image/png" href="/image/logoputih.png">
+    {{ style('home') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Mobile Top Bar (hanya muncul di mobile) -->
+    <div class="mobile-top-bar" style="display: none;">
+        <div class="logo">
+            <img class="logopmm" src="/image/logopmm.png" alt="Logo PMM Connect">
+            <span>PMM Connect</span>
+        </div>
+        <div class="mobile-top-actions">
+            <i class="fas fa-bell" title="Notifikasi"></i>
+            <i class="fas fa-envelope" title="Pesan"></i>
+        </div>
+    </div>
+
+
+    <!-- Left Sidebar -->
+    <nav class="sidebar left-sidebar" id="leftSidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img class="logopmm" src="/image/logopmm.png" alt="Logo PMM Connect"></img>
+                <span class="logo-text">PMM Connect</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul class="menu-list">
+                <li class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span class="menu-text">Beranda</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-search"></i>
+                    <span class="menu-text">Pencarian</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-envelope"></i>
+                    <span class="menu-text">Pesan</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span class="menu-text">Notifikasi</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="menu-text">Buat</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="menu-text">Profil</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="menu-item">
+                <i class="fas fa-bars"></i>
+                <span class="menu-text">Lainnya</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Left Sidebar Toggle Button -->
+    <button class="sidebar-toggle left-toggle" id="leftToggle">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="post">
+                <i class="fas fa-image"></i>
+                Post
+            </button>
+            <button class="tab-button" data-tab="conex">
+                <i class="fas fa-comment"></i>
+                Connex
+            </button>
+        </div>
+
+        <!-- Post Tab Content -->
+        <div class="tab-content active" id="postTab">
+            <div class="content-placeholder">
+                <div class="placeholder-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <h3>Tidak Ada Post</h3>
+                <p>Belum ada konten post untuk ditampilkan.</p>
+            </div>
+        </div>
+
+        <!-- Conex Tab Content -->
+        <div class="tab-content" id="conexTab">
+            <!-- Create Conex Input -->
+            <div class="create-conex">
+                <div class="user-avatar">
+                    @if(user && user.avatar)
+                        <img src="{{ user.avatar }}" alt="Avatar">
+                    @else
+                        <i class="fas fa-user-circle"></i>
+                    @endif
+                </div>
+                <div class="input-container">
+                    <textarea placeholder="Ada cerita yang ingin dibagikan?" rows="3"></textarea>
+
+                    <div class="conex-actions">
+                        <div class="conex-options">
+                            <button class="option-btn" title="Tambah Emoji">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                            <button class="option-btn" title="Buat Poll">
+                                <i class="fas fa-poll"></i>
+                            </button>
+
+                            <!-- Emoji Picker -->
+                            <div class="emoji-picker" id="emojiPicker" style="display: none;">
+                                <div class="emoji-header">
+                                    <h4>Pilih Emoji</h4>
+                                    <button class="close-emoji" id="closeEmoji">&times;</button>
+                                </div>
+                                <div class="emoji-search">
+                                    <input type="text" placeholder="Cari emoji..." id="emojiSearch">
+                                </div>
+                                <div class="emoji-categories">
+                                    <button class="emoji-category active" data-category="smileys">😊</button>
+                                    <button class="emoji-category" data-category="gestures">👋</button>
+                                    <button class="emoji-category" data-category="people">👨</button>
+                                    <button class="emoji-category" data-category="animals">🐶</button>
+                                    <button class="emoji-category" data-category="food">🍕</button>
+                                    <button class="emoji-category" data-category="travel">✈️</button>
+                                    <button class="emoji-category" data-category="activities">⚽</button>
+                                    <button class="emoji-category" data-category="objects">💡</button>
+                                    <button class="emoji-category" data-category="symbols">❤️</button>
+                                    <button class="emoji-category" data-category="flags">🚩</button>
+                                </div>
+                                <div class="emoji-grid" id="emojiGrid"></div>
+                            </div>
+
+                            <!-- Poll Creator -->
+                            <div class="poll-creator" id="pollCreator" style="display: none;">
+                                <div class="poll-header">
+                                    <h4>Buat Polling</h4>
+                                    <button class="close-poll" id="closePoll">&times;</button>
+                                </div>
+                                <div class="poll-options-container">
+                                    <input type="text" class="poll-option" placeholder="Opsi 1" maxlength="50">
+                                    <input type="text" class="poll-option" placeholder="Opsi 2" maxlength="50">
+                                </div>
+                                <button class="add-poll-option" id="addPollOption">
+                                    <i class="fas fa-plus"></i> Tambah Opsi
+                                </button>
+                                <div class="poll-settings">
+                                    <label>
+                                        <input type="checkbox" id="pollMultiple"> Izinkan pilihan ganda
+                                    </label>
+                                    <div class="poll-duration">
+                                        <label>Durasi:</label>
+                                        <select id="pollDuration">
+                                            <option value="1">1 Hari</option>
+                                            <option value="3">3 Hari</option>
+                                            <option value="7" selected>7 Hari</option>
+                                            <option value="14">14 Hari</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="apply-poll-btn" id="applyPoll">Terapkan Poll</button>
+                            </div>  
+                        </div>
+                        <button class="share-btn" disabled>Bagikan</button>
+                    </div>
+                </div>
+            </div>
+                        
+            <div class="content-separator"></div>
+            
+            <div class="content-placeholder">
+                <div class="placeholder-icon">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <h3>Tidak Ada Connex</h3>
+                <p>Belum ada konten connex untuk ditampilkan.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar right-sidebar" id="rightSidebar">
+        <div class="user-profile">
+            <div class="user-avatar">
+                @if(user && user.avatar)
+                    <img src="{{ user.avatar }}" alt="Avatar">
+                @else
+                    <i class="fas fa-user-circle"></i>
+                @endif
+            </div>
+            <div class="user-info">
+                <h4>
+                    @if(user && user.name)
+                        {{ user.name }}
+                    @else
+                        User Demo
+                    @endif
+                </h4>
+                <p>
+                    @if(user && user.username)
+                        @{{ user.username }}
+                    @else
+                        @demo_user
+                    @endif
+                </p>
+            </div>
+            <button class="switch-btn">Beralih</button>
+        </div>
+        
+        <div class="suggestions">
+            <div class="suggestions-header">
+                <h3>Disarankan untuk Anda</h3>
+                <button class="see-all-btn">Lihat Semua</button>
+            </div>
+            
+            <div class="suggestions-placeholder">
+                <div class="placeholder-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <p>Tidak ada saran untuk ditampilkan</p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Right Sidebar Toggle Button -->
+    <button class="sidebar-toggle right-toggle" id="rightToggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Hidden CSRF Token for AJAX requests -->
+    <meta name="csrf-token" content="{{ csrfToken }}">
+
+    <!-- JavaScript -->
+   <script src="/js/home.js"></script>
+</body>
+</html>

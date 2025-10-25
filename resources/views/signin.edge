@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk - PMM Connect</title>
+  <link rel="icon" type="image/png" href="/image/logoputih.png">
+  {{ style('signin') }}
+</head>
+<body>
+  <div class="signin-container">
+    <div class="signin-header">
+      <div class="logo-container">
+        <img class="logo" src="/image/logopmm.png" alt="Logo PMM Connect"></img>
+        <h1>PMM Connect</h1>
+      </div>
+      <p class="subtitle">Masuk ke akun PMM Connect Anda</p>
+    </div>
+
+    <div class="signin-form-container">
+      <div class="tab-container">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="peserta">Peserta</button>
+          <button class="tab-button" data-tab="koordinator">Koordinator</button>
+          <button class="tab-button" data-tab="umum">Umum</button>
+        </div>
+
+        <!-- Tab Peserta -->
+        <div class="tab-content active" id="peserta">
+          <form class="signin-form" action="/signin" method="POST">
+            <input type="hidden" name="userType" value="peserta">
+            
+            <div class="form-group">
+              <label for="nim">NIM</label>
+              <input type="text" id="nim" name="nim" placeholder="Masukkan NIM Anda" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password-peserta">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-peserta" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-peserta">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-masuk">Masuk</button>
+          </form>
+        </div>
+
+        <!-- Tab Koordinator -->
+        <div class="tab-content" id="koordinator">
+          <form class="signin-form" action="/signin" method="POST">
+            <input type="hidden" name="userType" value="koordinator">
+            
+            <div class="form-group">
+              <label for="nidn">NIDN</label>
+              <input type="text" id="nidn" name="nidn" placeholder="Masukkan NIDN Anda" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password-koordinator">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-koordinator" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-koordinator">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-masuk">Masuk</button>
+          </form>
+        </div>
+
+        <!-- Tab Umum -->
+        <div class="tab-content" id="umum">
+          <form class="signin-form" action="/signin" method="POST">
+            <input type="hidden" name="userType" value="umum">
+            
+            <div class="form-group">
+              <label for="password-umum">Password</label>
+              <div class="password-container">
+                <input type="password" id="password-umum" name="password" placeholder="Masukkan password" required>
+                <button type="button" class="eye-toggle" data-target="password-umum">
+                  <span class="eye-icon">👁</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-masuk">Masuk</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="signin-footer">
+      <p>Belum punya akun? <a href="/signup">Daftar di sini</a></p>
+    </div>
+  </div>
+
+  <script src="/js/signin.js"></script>
+</body>
+</html>

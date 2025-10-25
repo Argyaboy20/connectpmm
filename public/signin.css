@@ -1,0 +1,499 @@
+/* ===== GLOBAL STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e9ecef;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.signin-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* ===== HEADER SECTION ===== */
+.signin-header {
+    text-align: center;
+    padding: 40px 30px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.logo {
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signin-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 16px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* ===== FORM CONTAINER ===== */
+.signin-form-container {
+    padding: 30px;
+}
+
+/* ===== TABS ===== */
+.tab-container {
+    width: 100%;
+}
+
+.tabs {
+    display: flex;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 25px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    color: #6c757d;
+    transition: all 0.2s ease;
+}
+
+.tab-button.active {
+    background: white;
+    color: #495057;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button:hover:not(.active) {
+    background: #e9ecef;
+}
+
+/* ===== TAB CONTENT ===== */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== FORM STYLES ===== */
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-group input {
+    padding: 14px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* ===== PASSWORD CONTAINER ===== */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    padding-right: 50px;
+    width: 100%;
+}
+
+.eye-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #6c757d;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-toggle:hover {
+    color: #495057;
+}
+
+.eye-icon {
+    font-size: 18px;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-masuk {
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-masuk:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-masuk:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-masuk.loading {
+    pointer-events: none;
+}
+
+/* ===== LOADING SPINNER ===== */
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== ERROR MESSAGES ===== */
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    padding-left: 4px;
+}
+
+/* ===== NOTIFICATION ===== */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+    background: #28a745;
+}
+
+.notification.error {
+    background: #dc3545;
+}
+
+.notification.info {
+    background: #17a2b8;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===== FOOTER ===== */
+.signin-footer {
+    padding: 20px 30px 30px;
+    text-align: center;
+    background: #f8f9fa;
+}
+
+.signin-footer p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.signin-footer a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.signin-footer a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* ===== RESPONSIVE HEIGHT ADJUSTMENTS ===== */
+.signin-container.tab-peserta,
+.signin-container.tab-koordinator {
+    min-height: auto;
+}
+
+.signin-container.tab-umum {
+    min-height: auto;
+}
+
+/* ===== TABLET STYLES ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .signin-container {
+        max-width: 420px;
+        border-radius: 16px;
+    }
+
+    .signin-header {
+        padding: 30px 25px 25px;
+    }
+
+    .signin-header h1 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .logo {
+        width: 45px;
+        height: 45px;
+    }
+
+    .signin-form-container {
+        padding: 25px;
+    }
+
+    .tab-button {
+        padding: 11px 14px;
+        font-size: 13px;
+    }
+
+    .form-group input {
+        padding: 13px 15px;
+        font-size: 15px;
+    }
+
+    .password-container input {
+        padding-right: 48px;
+    }
+
+    .eye-toggle {
+        right: 11px;
+    }
+
+    .btn-masuk {
+        padding: 13px 22px;
+        font-size: 15px;
+    }
+
+    .signin-footer {
+        padding: 18px 25px 25px;
+    }
+
+    .signin-footer p {
+        font-size: 13px;
+    }
+
+    .notification {
+        top: 15px;
+        right: 15px;
+        font-size: 14px;
+    }
+}
+
+/* ===== SMARTPHONE STYLES ===== */
+@media (max-width: 640px) {
+    body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+
+    .signin-container {
+        max-width: 100%;
+        border-radius: 12px;
+        min-height: auto;
+    }
+
+    .signin-header {
+        padding: 25px 20px 20px;
+    }
+
+    .signin-header h1 {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo-container {
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .signin-form-container {
+        padding: 20px;
+    }
+
+    .tabs {
+        margin-bottom: 20px;
+        padding: 3px;
+    }
+
+    .tab-button {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .signin-form {
+        gap: 18px;
+    }
+
+    .form-group {
+        gap: 6px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input {
+        padding: 12px 14px;
+        font-size: 16px;
+    }
+
+    .password-container input {
+        padding-right: 46px;
+    }
+
+    .eye-toggle {
+        right: 10px;
+    }
+
+    .eye-icon {
+        font-size: 16px;
+    }
+
+    .btn-masuk {
+        padding: 12px 20px;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+
+    .signin-footer {
+        padding: 15px 20px 20px;
+    }
+
+    .signin-footer p {
+        font-size: 12px;
+    }
+
+    .error-message {
+        font-size: 11px;
+    }
+
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        font-size: 13px;
+    }
+
+    /* Adjust container height for different tabs on mobile */
+    .signin-container.tab-umum {
+        min-height: auto;
+    }
+    
+    .signin-container.tab-peserta,
+    .signin-container.tab-koordinator {
+        min-height: auto;
+    }
+}
