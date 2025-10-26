@@ -5,6 +5,7 @@
   "description": "The fullstack application boilerplate for Adonisjs",
   "main": "index.js",
   "scripts": {
+    "vercel-build": "cp .env.example .env && npm install --production",
     "start": "node server.js",
     "test": "node ace test"
   },

@@ -23,3 +23,6 @@ new Ignitor(require('@adonisjs/fold'))
   .appRoot(__dirname)
   .fireHttpServer()
   .catch(console.error)
+
+  // Export untuk Vercel
+module.exports = require('./server.js')
