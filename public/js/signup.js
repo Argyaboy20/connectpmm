@@ -342,56 +342,24 @@ class SignUpManager {
 
         forms.forEach(form => {
             form.addEventListener('submit', (e) => {
-                const userType = form.querySelector('input[name="userType"]').value;
-                const passwordInput = form.querySelector('input[type="password"]');
-
-                // Validasi password
-                if (passwordInput && !this.validatePassword(passwordInput)) {
-                    e.preventDefault();
-                    alert('Password tidak memenuhi kriteria yang ditentukan');
-                    return;
+                e.preventDefault(); // Cegah submit normal
+                
+                // Tentukan redirect berdasarkan tab yang aktif
+                let redirectUrl = '/home'; // Default
+                
+                if (this.activeTab === 'peserta') {
+                    redirectUrl = '/home';
+                } else if (this.activeTab === 'koordinator') {
+                    redirectUrl = '/koordinator';
+                } else if (this.activeTab === 'umum') {
+                    redirectUrl = '/homeumum';
                 }
+                
+                // Simpan user type ke localStorage
+                localStorage.setItem('userType', this.activeTab);
 
-                // Validasi khusus berdasarkan userType
-                if (!this.validateFormByType(form, userType)) {
-                    e.preventDefault();
-                    return;
-                }
-
-                // Basic form validation
-                const requiredFields = form.querySelectorAll('[required]');
-                let isValid = true;
-                let firstErrorField = null;
-
-                requiredFields.forEach(field => {
-                    // Skip hidden fields
-                    if (field.style.display === 'none' || field.offsetParent === null) {
-                        return;
-                    }
-
-                    if (!field.value.trim()) {
-                        isValid = false;
-                        field.style.borderColor = '#dc3545';
-                        if (!firstErrorField) {
-                            firstErrorField = field;
-                        }
-                    } else {
-                        field.style.borderColor = '#e9ecef';
-                    }
-                });
-
-                if (!isValid) {
-                    e.preventDefault();
-                    alert('Mohon lengkapi semua field yang wajib diisi');
-                    if (firstErrorField) {
-                        firstErrorField.focus();
-                    }
-                    return;
-                }
-
-                // Show loading state
-                const submitBtn = form.querySelector('.btn-daftar');
-                showLoading(submitBtn);
+                // Lalu redirect
+                window.location.href = redirectUrl;
             });
         });
     }

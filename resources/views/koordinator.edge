@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Koordinator - PMM Connect</title>
+    <link rel="icon" type="image/png" href="/image/logoputih.png">
+    {{ style('koordinator') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Mobile Top Bar (hanya muncul di mobile) -->
+    <div class="mobile-top-bar" style="display: none;">
+        <div class="logo">
+            <img class="logopmm" src="/image/logopmm.png" alt="Logo PMM Connect">
+            <span>PMM Connect</span>
+        </div>
+        <div class="mobile-top-actions">
+            <i class="fas fa-bell" title="Notifikasi"></i>
+            <i class="fas fa-envelope" title="Pesan"></i>
+        </div>
+    </div>
+
+    <!-- Left Sidebar -->
+    <nav class="sidebar left-sidebar" id="leftSidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img class="logopmm" src="/image/logopmm.png" alt="Logo PMM Connect">
+                <span class="logo-text">PMM Connect</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul class="menu-list">
+                <li class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span class="menu-text">Dashboard</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="menu-text">Laporan Mahasiswa</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-envelope"></i>
+                    <span class="menu-text">Pesan</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span class="menu-text">Notifikasi</span>
+                </li>
+                 <li class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span class="menu-text">Data Mahasiswa</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="menu-text">Profil</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="menu-item">
+                <i class="fas fa-bars"></i>
+                <span class="menu-text">Lainnya</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Left Sidebar Toggle Button -->
+    <button class="sidebar-toggle left-toggle" id="leftToggle">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard Content -->
+        <div class="dashboard-header">
+            <h1>Dashboard Koordinator</h1>
+            <p class="welcome-text">Selamat datang, 
+                @if(user && user.name)
+                    {{ user.name }}
+                @else
+                    Koordinator
+                @endif
+            </p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>24</h3>
+                    <p>Total Laporan</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>8</h3>
+                    <p>Menunggu Review</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>16</h3>
+                    <p>Disetujui</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>45</h3>
+                    <p>Mahasiswa Aktif</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <div class="section-header">
+                <h2>Aktivitas Terbaru</h2>
+                <button class="see-all-btn">Lihat Semua</button>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p><strong>Ahmad Fauzi</strong> mengirim laporan Kebhinekaan</p>
+                        <span class="activity-time">5 menit yang lalu</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p>Laporan <strong>Siti Nurhaliza</strong> telah disetujui</p>
+                        <span class="activity-time">1 jam yang lalu</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p><strong>Budi Santoso</strong> bergabung sebagai mahasiswa baru</p>
+                        <span class="activity-time">2 jam yang lalu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar right-sidebar" id="rightSidebar">
+        <div class="user-profile">
+            <div class="user-avatar">
+                @if(user && user.avatar)
+                    <img src="{{ user.avatar }}" alt="Avatar">
+                @else
+                    <i class="fas fa-user-circle"></i>
+                @endif
+            </div>
+            <div class="user-info">
+                <h4>
+                    @if(user && user.name)
+                        {{ user.name }}
+                    @else
+                        Koordinator PMM
+                    @endif
+                </h4>
+                <p class="user-role">Koordinator</p>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <div class="section-header">
+                <h3>Aksi Cepat</h3>
+            </div>
+            <button class="quick-action-btn">
+                <i class="fas fa-file-alt"></i>
+                <span>Lihat Laporan Baru</span>
+            </button>
+            <button class="quick-action-btn">
+                <i class="fas fa-users"></i>
+                <span>Kelola Mahasiswa</span>
+            </button>
+            <button class="quick-action-btn">
+                <i class="fas fa-download"></i>
+                <span>Unduh Laporan</span>
+            </button>
+        </div>
+
+        <div class="pending-reviews">
+            <div class="section-header">
+                <h3>Perlu Direview</h3>
+            </div>
+            <div class="pending-list">
+                <div class="pending-item">
+                    <div class="pending-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="pending-info">
+                        <h5>Ahmad Fauzi</h5>
+                        <p>Kebhinekaan</p>
+                    </div>
+                    <span class="pending-badge">Baru</span>
+                </div>
+                <div class="pending-item">
+                    <div class="pending-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="pending-info">
+                        <h5>Dewi Lestari</h5>
+                        <p>Inspirasi</p>
+                    </div>
+                    <span class="pending-badge">Baru</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Right Sidebar Toggle Button -->
+    <button class="sidebar-toggle right-toggle" id="rightToggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Hidden CSRF Token for AJAX requests -->
+    <meta name="csrf-token" content="{{ csrfToken }}">
+
+    <!-- JavaScript -->
+    <script src="/js/koordinator.js"></script>
+</body>
+</html>

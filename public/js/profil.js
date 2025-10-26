@@ -11,8 +11,53 @@ class ProfileManager {
         this.init();
     }
 
+    /* Detect user type from storage */
+    getUserType() {
+        // Ambil dari localStorage
+        const userType = localStorage.getItem('userType');
+        // Default ke peserta jika tidak ada
+        return userType || 'peserta';
+    }
+
+    /* Check if current user is koordinator */
+    isKoordinator() {
+        return this.getUserType() === 'koordinator';
+    }
+
+    /* Get home URL based on user type */
+    getHomeUrl() {
+        const userType = this.getUserType();
+        
+        // Map user type ke URL
+        const homeUrls = {
+            'peserta': '/home',
+            'koordinator': '/koordinator',
+            'umum': '/homeumum'
+        };
+        
+        return homeUrls[userType] || '/home';
+    }
+
+    /* Get URL with menu parameter based on user type */
+    getMenuUrl(menuName) {
+        const userType = this.getUserType();
+        
+        // Map user type ke base URL
+        const baseUrls = {
+            'peserta': '/home',
+            'koordinator': '/koordinator',
+            'umum': '/homeumum'
+        };
+        
+        const baseUrl = baseUrls[userType] || '/home';
+        
+        // Return URL dengan query parameter
+        return `${baseUrl}?menu=${menuName}`;
+    }
+
     /* Initialize all components */
     init() {
+        this.renderDynamicSidebar();
         this.setupSidebarToggle();
         this.setupMenuItems();
         this.setupProfileTabs();
@@ -23,6 +68,56 @@ class ProfileManager {
         this.loadMockContent();
         this.handleResponsive();
         this.handleTabletView();
+    }
+
+    /* Render sidebar based on user type */
+    renderDynamicSidebar() {
+        if (!this.isKoordinator()) return;
+        
+        const menuList = document.querySelector('.menu-list');
+        if (!menuList) return;
+        
+        const koordinatorMenu = `
+            <li class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span class="menu-text">Laporan Mahasiswa</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Data Mahasiswa</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span class="menu-text">Pesan</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span class="menu-text">Notifikasi</span>
+            </li>
+            <li class="menu-item active">
+                <i class="fas fa-user-circle"></i>
+                <span class="menu-text">Profil</span>
+            </li>
+        `;
+        
+        menuList.innerHTML = koordinatorMenu;
+        
+        // TAMBAHKAN INI: Force visibility di mobile
+        const isMobile = window.innerWidth <= 640;
+        if (isMobile && this.leftSidebar) {
+            this.leftSidebar.style.display = 'flex';
+            this.leftSidebar.style.visibility = 'visible';
+            menuList.style.display = 'flex';
+        }
+        
+        setTimeout(() => {
+            this.setupMenuItems();
+            this.handleMobileView(); // Re-check mobile view
+        }, 100);
     }
 
     /* Setup sidebar toggle functionality */
@@ -56,37 +151,72 @@ class ProfileManager {
 
         menuItems.forEach(item => {
             item.addEventListener('click', () => {
-                // Get menu text from .menu-text element
                 const menuTextElement = item.querySelector('.menu-text');
                 const menuText = menuTextElement ? menuTextElement.textContent.trim() : '';
                 
-                console.log('Profile menu clicked:', menuText); // Debug log
+                console.log('Profile menu clicked:', menuText);
                 
-                // Remove active from all menu items
                 menuItems.forEach(mi => mi.classList.remove('active'));
                 item.classList.add('active');
                 
-                // Navigation logic based on menu text
-                if (menuText === 'Beranda') {
-                    window.location.href = '/home';
-                } else if (menuText === 'Profil') {
-                    // Already on profile page, do nothing
-                } else if (menuText === 'Pencarian') {
-                    window.location.href = '/home?menu=pencarian';
-                } else if (menuText === 'Pesan') {
-                    window.location.href = '/home?menu=pesan';
-                } else if (menuText === 'Notifikasi') {
-                    window.location.href = '/home?menu=notifikasi';
-                } else if (menuText === 'Buat') {
-                    window.location.href = '/home?menu=buat';
-                } else if (menuText === 'Lainnya') {
-                    window.location.href = '/setting';
+                // Jika user adalah koordinator, gunakan routing koordinator
+                if (this.isKoordinator()) {
+                    this.handleKoordinatorMenu(menuText);
                 } else {
-                    // Fallback untuk menu yang tidak dikenali
-                    this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+                    this.handleDefaultMenu(menuText);
                 }
             });
         });
+    }
+
+    /* Handle koordinator menu navigation */
+    handleKoordinatorMenu(menuText) {
+        switch(menuText) {
+            case 'Dashboard':
+                window.location.href = '/koordinator';
+                break;
+            case 'Laporan Mahasiswa':
+                window.location.href = '/koordinator?menu=laporan';
+                break;
+            case 'Data Mahasiswa':
+                window.location.href = '/koordinator?menu=data';
+                break;
+            case 'Pesan':
+                window.location.href = '/koordinator?menu=pesan';
+                break;
+            case 'Notifikasi':
+                window.location.href = '/koordinator?menu=notifikasi';
+                break;
+            case 'Profil':
+                // Already on profile page
+                break;
+            case 'Lainnya':
+                window.location.href = '/setting';
+                break;
+            default:
+                this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+        }
+    }
+
+    /* Handle default menu navigation (peserta/umum) */
+    handleDefaultMenu(menuText) {
+        if (menuText === 'Beranda') {
+            window.location.href = this.getHomeUrl();
+        } else if (menuText === 'Profil') {
+            // Already on profile page
+        } else if (menuText === 'Pencarian') {
+            window.location.href = this.getMenuUrl('pencarian');
+        } else if (menuText === 'Pesan') {
+            window.location.href = this.getMenuUrl('pesan');
+        } else if (menuText === 'Notifikasi') {
+            window.location.href = this.getMenuUrl('notifikasi');
+        } else if (menuText === 'Buat') {
+            window.location.href = this.getMenuUrl('buat');
+        } else if (menuText === 'Lainnya') {
+            window.location.href = '/setting';
+        } else {
+            this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+        }
     }
 
     /* Setup profile tabs */
@@ -157,7 +287,7 @@ class ProfileManager {
         this.messageBtn.addEventListener('click', () => {
             console.log('Message button clicked');
             // Navigate to message page with user context
-            window.location.href = '/home?menu=pesan';
+            window.location.href = this.getMenuUrl('pesan');
             // TODO: Open direct message when database is connected
         });
     }
@@ -231,18 +361,18 @@ class ProfileManager {
         
         if (!grid) return;
         
-        // Mock data - replace with actual API call
+        // Mock data - menggunakan gambar lokal dari public/image/
         const mockPosts = [
-            { id: 1, image: 'https://picsum.photos/400/400?random=1', likes: 234, comments: 12, date: '2025-10-24T10:30:00' },
-            { id: 2, image: 'https://picsum.photos/400/400?random=2', likes: 189, comments: 8, date: '2025-10-23T14:20:00' },
-            { id: 3, image: 'https://picsum.photos/400/400?random=3', likes: 456, comments: 23, date: '2025-10-22T09:15:00' },
-            { id: 4, image: 'https://picsum.photos/400/400?random=4', likes: 321, comments: 15, date: '2025-10-21T16:45:00' },
-            { id: 5, image: 'https://picsum.photos/400/400?random=5', likes: 567, comments: 34, date: '2025-10-20T11:00:00' },
-            { id: 6, image: 'https://picsum.photos/400/400?random=6', likes: 123, comments: 7, date: '2025-10-19T13:30:00' },
-            { id: 7, image: 'https://picsum.photos/400/400?random=7', likes: 890, comments: 45, date: '2025-10-18T08:20:00' },
-            { id: 8, image: 'https://picsum.photos/400/400?random=8', likes: 234, comments: 19, date: '2025-10-17T15:10:00' }
+            { id: 1, image: '/image/pmm1.jpeg', likes: 234, comments: 12, date: '2025-10-24T10:30:00' },
+            { id: 2, image: '/image/pmm2.jpeg', likes: 189, comments: 8, date: '2025-10-23T14:20:00' },
+            { id: 3, image: '/image/pmm3.jpeg', likes: 456, comments: 23, date: '2025-10-22T09:15:00' },
+            { id: 4, image: '/image/pmm4.jpeg', likes: 321, comments: 15, date: '2025-10-21T16:45:00' },
+            { id: 5, image: '/image/pmm5.jpeg', likes: 567, comments: 34, date: '2025-10-20T11:00:00' },
+            { id: 6, image: '/image/pmm6.jpeg', likes: 123, comments: 7, date: '2025-10-19T13:30:00' },
+            { id: 7, image: '/image/pmm7.jpeg', likes: 890, comments: 45, date: '2025-10-18T08:20:00' },
+            { id: 8, image: '/image/pmm8.jpeg', likes: 234, comments: 19, date: '2025-10-17T15:10:00' }
         ];
-        
+
         if (mockPosts.length > 0) {
             emptyState.style.display = 'none';
             grid.innerHTML = mockPosts.map(post => `
@@ -274,7 +404,7 @@ class ProfileManager {
         const mockConex = [
             {
                 id: 1,
-                content: 'Hari ini adalah hari yang indah untuk memulai sesuatu yang baru! 🌟 Semangat untuk semua yang sedang berjuang mencapai impiannya.',
+                content: 'Owh jadi gini rasanya kenalan dengan berbeda-beda suku dan budaya. Seru juga ya!',
                 likes: 45,
                 comments: 12,
                 shares: 3,
@@ -283,7 +413,7 @@ class ProfileManager {
             },
             {
                 id: 2,
-                content: 'Kadang kita perlu melambat untuk bisa melihat keindahan di sekitar kita. Jangan terburu-buru, nikmati prosesnya. 🌸',
+                content: 'Guys, hari ini aku belajar banyak tentang pentingnya kolaborasi dalam tim. Yuk, saling support!',
                 likes: 67,
                 comments: 8,
                 shares: 5,
@@ -292,7 +422,7 @@ class ProfileManager {
             },
             {
                 id: 3,
-                content: 'Belajar dari kesalahan adalah bagian dari pertumbuhan. Terus maju, jangan menyerah! 💪',
+                content: 'Ngeliat cara belajar di kampus penerima ini aku jadi insecure huhu. Tapi aku harus semangat dong!',
                 likes: 123,
                 comments: 23,
                 shares: 10,
@@ -301,7 +431,7 @@ class ProfileManager {
             },
             {
                 id: 4,
-                content: 'Kesuksesan bukanlah tujuan akhir, tapi perjalanan yang terus berlanjut. Keep going! ✨',
+                content: 'Capek sih, tapi seru banget hari ini bisa eksplor tempat baru dan kenalan sama orang-orang keren!',
                 likes: 89,
                 comments: 15,
                 shares: 7,
@@ -383,9 +513,33 @@ class ProfileManager {
     /* Handle mobile view adjustments */
     handleMobileView() {
         const isMobile = window.innerWidth <= 640;
-
-        if (this.leftToggle) {
-            this.leftToggle.style.display = isMobile ? 'none' : 'flex';
+        
+        if (isMobile) {
+            // Force show sidebar di mobile
+            if (this.leftSidebar) {
+                this.leftSidebar.style.display = 'flex';
+                this.leftSidebar.style.visibility = 'visible';
+                this.leftSidebar.style.opacity = '1';
+            }
+            
+            // Hide toggle button
+            if (this.leftToggle) {
+                this.leftToggle.style.display = 'none';
+            }
+            
+            // Ensure menu list is visible
+            const menuList = document.querySelector('.menu-list');
+            if (menuList) {
+                menuList.style.display = 'flex';
+            }
+            
+            // Log untuk debugging
+            console.log('Mobile view active - sidebar should be visible');
+        } else {
+            // Desktop/tablet view
+            if (this.leftToggle) {
+                this.leftToggle.style.display = 'flex';
+            }
         }
     }
 

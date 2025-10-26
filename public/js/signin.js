@@ -162,35 +162,24 @@ class SignInManager {
 
         forms.forEach(form => {
             form.addEventListener('submit', (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Cegah submit normal
                 
-                if (this.isSubmitting) {
-                    return;
+                // Tentukan redirect berdasarkan tab yang aktif
+                let redirectUrl = '/home'; // Default
+                
+                if (this.activeTab === 'peserta') {
+                    redirectUrl = '/home';
+                } else if (this.activeTab === 'koordinator') {
+                    redirectUrl = '/koordinator';
+                } else if (this.activeTab === 'umum') {
+                    redirectUrl = '/homeumum';
                 }
+                
+                // Simpan user type ke localStorage
+                localStorage.setItem('userType', this.activeTab);
 
-                const submitButton = form.querySelector('.btn-masuk');
-                const requiredFields = form.querySelectorAll('[required]');
-                let isValid = true;
-
-                // Validate all required fields
-                requiredFields.forEach(field => {
-                    if (!this.validateField(field)) {
-                        isValid = false;
-                    }
-                });
-
-                if (!isValid) {
-                    this.showNotification('Mohon perbaiki kesalahan pada form', 'error');
-                    return;
-                }
-
-                this.isSubmitting = true;
-
-                // Show loading state
-                this.showLoading(submitButton);
-
-                // Submit form
-                this.submitForm(form, submitButton);
+                // Lalu redirect
+                window.location.href = redirectUrl;
             });
         });
     }

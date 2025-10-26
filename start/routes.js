@@ -19,6 +19,10 @@ const Route = use('Route')
 Route.get('/', 'WelcomeController.welcome')
 Route.get('/signup', 'SignUpController.signup')
 Route.get('/signin', 'SignInController.signin')
+
 Route.get('/home', 'HomeController.home')
+Route.get('/homeumum', 'HomeUmumController.homeumum')
+Route.get('/koordinator', 'KoordinatorController.koordinator')
+
 Route.get('/profil', 'ProfilController.profil')
 Route.get('/setting', 'SettingController.setting')

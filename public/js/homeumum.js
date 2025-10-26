@@ -37,12 +37,12 @@ class SidebarManager {
         this.selectedEmojis = [];
         this.pollData = null;
         this.emojiDatabase = this.initEmojiDatabase();
-        this.selectedImageFiles = []; // TAMBAHKAN INI
-
+        this.selectedImageFiles = [];
+        
+        // TAMBAHKAN INI - Mock data untuk feed
         this.mockFeedPosts = this.initMockFeedPosts();
         this.mockFeedConex = this.initMockFeedConex();
 
-        // Simpan HTML asli right sidebar
         this.rightSidebarOriginalHTML = this.rightSidebar ? this.rightSidebar.innerHTML : '';
         this.init();
     }
@@ -137,7 +137,6 @@ class SidebarManager {
         const postFeed = document.getElementById('postFeed');
         if (!postFeed) return;
         
-        // Shuffle posts untuk randomize
         const shuffledPosts = this.shuffleArray(this.mockFeedPosts);
         
         postFeed.innerHTML = shuffledPosts.map(post => `
@@ -182,7 +181,6 @@ class SidebarManager {
             </div>
         `).join('');
         
-        // Setup interactions
         this.setupPostFeedInteractions();
     }
 
@@ -191,7 +189,6 @@ class SidebarManager {
         const conexFeed = document.getElementById('conexFeed');
         if (!conexFeed) return;
         
-        // Shuffle conex untuk randomize
         const shuffledConex = this.shuffleArray(this.mockFeedConex);
         
         conexFeed.innerHTML = shuffledConex.map(conex => `
@@ -224,7 +221,6 @@ class SidebarManager {
             </div>
         `).join('');
         
-        // Setup interactions
         this.setupConexFeedInteractions();
     }
 
@@ -243,7 +239,6 @@ class SidebarManager {
 
     /* Setup Post Feed Interactions */
     setupPostFeedInteractions() {
-        // Like button
         const likeBtns = document.querySelectorAll('.feed-action-btn.like-btn');
         likeBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -260,7 +255,6 @@ class SidebarManager {
             });
         });
         
-        // View comments
         const viewCommentBtns = document.querySelectorAll('.feed-view-comments');
         viewCommentBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -271,7 +265,6 @@ class SidebarManager {
 
     /* Setup Conex Feed Interactions */
     setupConexFeedInteractions() {
-        // Like, comment, share buttons
         const statBtns = document.querySelectorAll('.conex-stat-btn');
         statBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -309,7 +302,6 @@ class SidebarManager {
 
     /* Initialize all event listeners and setup components */
     init() {
-        // Check jika dari profil menggunakan sessionStorage
         const fromProfile = sessionStorage.getItem('fromProfile');
         
         if (fromProfile) {
@@ -339,8 +331,7 @@ class SidebarManager {
             this.handleTabletView();
         }
         
-        // PERBAIKAN INI - Render feed langsung saat init
-        // Gunakan requestAnimationFrame untuk pastikan DOM sudah ready
+        // TAMBAHKAN INI - Render feed saat pertama kali load
         requestAnimationFrame(() => {
             this.initialRenderFeed();
         });
@@ -353,7 +344,6 @@ class SidebarManager {
 
     /* Initial render feed on page load */
     initialRenderFeed() {
-        // Check apakah sedang di beranda
         const postFeed = document.getElementById('postFeed');
         const conexFeed = document.getElementById('conexFeed');
         
@@ -372,7 +362,7 @@ class SidebarManager {
         
         if (menu) {
             // Remove URL parameter
-            window.history.replaceState({}, '', '/home');
+            window.history.replaceState({}, '', '/homeumum');
             
             // Show content (sidebar sudah collapsed dari init)
             switch(menu) {
@@ -524,6 +514,13 @@ class SidebarManager {
             button.addEventListener('click', () => {
                 const targetTab = button.getAttribute('data-tab');
                 this.switchTab(targetTab, tabButtons, tabContents);
+                
+                // TAMBAHKAN INI - Re-render feed ketika switch tab
+                if (targetTab === 'post') {
+                    setTimeout(() => this.renderPostFeed(), 50);
+                } else if (targetTab === 'conex') {
+                    setTimeout(() => this.renderConexFeed(), 50);
+                }
             });
         });
     }
@@ -979,14 +976,12 @@ class SidebarManager {
     showBerandaContent() {
         this.hideAllMenuContents();
         
-        // Reset sidebar states untuk Beranda
         this.expandLeftSidebar();
         this.showRightSidebar();
         
         const mainContent = document.getElementById('mainContent');
         if (mainContent) {
             mainContent.innerHTML = this.getBerandaTemplate();
-            // Reinitialize beranda-specific features
             this.setupTabNavigation();
             this.setupConexInput();
             this.setupEmojiPicker();
@@ -997,7 +992,6 @@ class SidebarManager {
             this.renderConexFeed();
         }
         
-        // Update margins after content loaded
         this.updateMainContentMargins();
     }
 
@@ -1122,7 +1116,13 @@ class SidebarManager {
 
             <!-- Post Tab Content -->
             <div class="tab-content active" id="postTab">
-                <div class="feed-container" id="postFeed"></div>
+                <div class="content-placeholder">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3>Tidak Ada Post</h3>
+                    <p>Belum ada konten post untuk ditampilkan.</p>
+                </div>
             </div>
 
             <!-- Conex Tab Content -->
@@ -1201,10 +1201,14 @@ class SidebarManager {
                         </div>
                     </div>
                 </div>
-
                 <div class="content-separator"></div>
-                
-                <div class="feed-container" id="conexFeed"></div>
+                <div class="content-placeholder">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <h3>Tidak Ada Connex</h3>
+                    <p>Belum ada konten connex untuk ditampilkan.</p>
+                </div>
             </div>
         `;
     }
@@ -1367,14 +1371,6 @@ class SidebarManager {
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- TAMBAHAN: PMM Report Section -->
-                    <div class="pmm-report-section">
-                        <h3>📋 Laporan Kegiatan</h3>
-                        <button class="open-pmm-report-btn" id="openPmmReport">
-                            Buat Laporan PMM
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Step 2: Caption & Location -->
@@ -1393,100 +1389,6 @@ class SidebarManager {
                             <button class="publish-btn" id="publishPost">Bagikan</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        `;
-    }
-
-    /* Get PMM Report template */
-    getPmmReportTemplate() {
-        // Get today's date in YYYY-MM-DD format for max attribute
-        const today = new Date().toISOString().split('T')[0];
-        
-        return `
-            <div class="pmm-report-content">
-                <div class="create-header">
-                    <button class="back-btn" id="backFromPmmReport">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <h2>Laporan PMM</h2>
-                </div>
-
-                <div class="pmm-report-form">
-                    <!-- Upload Foto -->
-                    <div class="form-section">
-                        <label>
-                            Upload Foto <span class="required">*</span>
-                        </label>
-                        <input type="file" id="pmmImageInput" accept="image/*" multiple style="display: none;">
-                        <div class="pmm-image-upload" id="pmmImageUpload">
-                            <i class="fas fa-camera"></i>
-                            <p>Klik untuk upload foto</p>
-                            <p class="upload-limit">Maksimal 2 foto</p>
-                        </div>
-                        <div class="pmm-images-preview" id="pmmImagesPreview"></div>
-                        <div class="error-message" id="imageError">Harap upload minimal 1 foto</div>
-                    </div>
-
-                    <!-- Tanggal Kegiatan -->
-                    <div class="form-section">
-                        <label for="activityDate">
-                            Tanggal Kegiatan <span class="required">*</span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="activityDate" 
-                            class="date-input"
-                            max="${today}"
-                            required
-                        >
-                        <div class="error-message" id="dateError">Harap pilih tanggal kegiatan</div>
-                    </div>
-
-                    <!-- Jenis Kegiatan -->
-                    <div class="form-section">
-                        <label>
-                            Jenis Kegiatan <span class="required">*</span>
-                        </label>
-                        <div class="activity-type-options">
-                            <div class="activity-type-option">
-                                <input type="radio" id="kebhinekaan" name="activityType" value="Kebhinekaan">
-                                <label for="kebhinekaan">Kebhinekaan</label>
-                            </div>
-                            <div class="activity-type-option">
-                                <input type="radio" id="inspirasi" name="activityType" value="Inspirasi">
-                                <label for="inspirasi">Inspirasi</label>
-                            </div>
-                            <div class="activity-type-option">
-                                <input type="radio" id="refleksi" name="activityType" value="Refleksi">
-                                <label for="refleksi">Refleksi</label>
-                            </div>
-                            <div class="activity-type-option">
-                                <input type="radio" id="kontribusiSosial" name="activityType" value="Kontribusi Sosial">
-                                <label for="kontribusiSosial">Kontribusi Sosial</label>
-                            </div>
-                        </div>
-                        <div class="error-message" id="activityTypeError">Harap pilih jenis kegiatan</div>
-                    </div>
-
-                    <!-- Deskripsi Kegiatan -->
-                    <div class="form-section">
-                        <label for="activityDescription">
-                            Deskripsi Kegiatan <span class="required">*</span>
-                        </label>
-                        <textarea 
-                            id="activityDescription" 
-                            class="description-textarea"
-                            placeholder="Deskripsikan kegiatan Anda secara detail (minimal 1000 kata)..."
-                        ></textarea>
-                        <div class="word-count" id="wordCount">0 / 1000 kata</div>
-                        <div class="error-message" id="descriptionError">Deskripsi minimal 1000 kata</div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button class="submit-pmm-report-btn" id="submitPmmReport" disabled>
-                        <i class="fas fa-paper-plane"></i> Kirim Laporan
-                    </button>
                 </div>
             </div>
         `;
@@ -1740,123 +1642,6 @@ class SidebarManager {
                 this.handlePublishPost(this.selectedImageFiles);
             });
         }
-
-        // TAMBAHAN: Setup PMM Report Button
-        const openPmmReportBtn = document.getElementById('openPmmReport');
-        if (openPmmReportBtn) {
-            openPmmReportBtn.addEventListener('click', () => {
-                this.showPmmReportContent();
-            });
-        }
-    }
-
-    /* Show PMM Report Content */
-    showPmmReportContent() {
-        const mainContent = document.getElementById('mainContent');
-        if (!mainContent) return;
-
-        mainContent.innerHTML = this.getPmmReportTemplate();
-        this.setupPmmReportInteractions();
-        this.updateMainContentMargins();
-    }
-
-    /* Setup PMM Report interactions */
-    setupPmmReportInteractions() {
-        const pmmImageInput = document.getElementById('pmmImageInput');
-        const pmmImageUpload = document.getElementById('pmmImageUpload');
-        const pmmImagesPreview = document.getElementById('pmmImagesPreview');
-        const activityDate = document.getElementById('activityDate');
-        const activityDescription = document.getElementById('activityDescription');
-        const wordCount = document.getElementById('wordCount');
-        const submitBtn = document.getElementById('submitPmmReport');
-        const backBtn = document.getElementById('backFromPmmReport');
-
-        // Array untuk menyimpan foto yang dipilih
-        let pmmSelectedImages = [];
-
-        // Click upload area to trigger file input
-        if (pmmImageUpload) {
-            pmmImageUpload.addEventListener('click', () => {
-                pmmImageInput?.click();
-            });
-        }
-
-        // Handle image selection
-        if (pmmImageInput) {
-            pmmImageInput.addEventListener('change', (e) => {
-                const files = Array.from(e.target.files);
-                
-                // Validasi maksimal 2 foto
-                const remainingSlots = 2 - pmmSelectedImages.length;
-                const filesToAdd = files.slice(0, remainingSlots);
-                
-                if (files.length > remainingSlots) {
-                    this.showAlert('Batas Upload', `Maksimal 2 foto. Hanya ${remainingSlots} foto yang dapat ditambahkan.`);
-                }
-                
-                pmmSelectedImages = [...pmmSelectedImages, ...filesToAdd];
-                this.renderPmmImagePreviews(pmmSelectedImages, pmmImagesPreview);
-                this.validatePmmReportForm();
-                
-                // Reset input
-                pmmImageInput.value = '';
-            });
-        }
-
-        // Word counter for description
-        if (activityDescription) {
-            activityDescription.addEventListener('input', (e) => {
-                const text = e.target.value.trim();
-                const words = text ? text.split(/\s+/).filter(word => word.length > 0).length : 0;
-                
-                if (wordCount) {
-                    wordCount.textContent = `${words} / 1000 kata`;
-                    
-                    if (words < 1000) {
-                        wordCount.classList.add('warning');
-                        wordCount.classList.remove('success');
-                    } else {
-                        wordCount.classList.remove('warning');
-                        wordCount.classList.add('success');
-                    }
-                }
-                
-                this.validatePmmReportForm();
-            });
-        }
-
-        // Validate on date change
-        if (activityDate) {
-            activityDate.addEventListener('change', () => {
-                this.validatePmmReportForm();
-            });
-        }
-
-        // Validate on activity type change
-        const activityTypeRadios = document.querySelectorAll('input[name="activityType"]');
-        activityTypeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                this.validatePmmReportForm();
-            });
-        });
-
-        // Handle form submission
-        if (submitBtn) {
-            submitBtn.addEventListener('click', () => {
-                this.handlePmmReportSubmit(pmmSelectedImages);
-            });
-        }
-
-        // Handle back button
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                this.showBuatContent();
-                this.setActiveMenu('Buat');
-            });
-        }
-
-        // Store reference untuk digunakan di method lain
-        this.pmmSelectedImages = pmmSelectedImages;
     }
 
     /* Render PMM image previews */
@@ -1897,84 +1682,6 @@ class SidebarManager {
         
         const container = document.getElementById('pmmImagesPreview');
         this.renderPmmImagePreviews(this.pmmSelectedImages, container);
-        this.validatePmmReportForm();
-    }
-
-    /* Validate PMM Report form */
-    validatePmmReportForm() {
-        const images = this.pmmSelectedImages || [];
-        const date = document.getElementById('activityDate')?.value;
-        const activityType = document.querySelector('input[name="activityType"]:checked');
-        const description = document.getElementById('activityDescription')?.value.trim();
-        const words = description ? description.split(/\s+/).filter(word => word.length > 0).length : 0;
-        const submitBtn = document.getElementById('submitPmmReport');
-        
-        // Hide all error messages
-        document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
-        
-        // Validation
-        const isValid = images.length >= 1 && 
-                    date && 
-                    activityType && 
-                    words >= 1000;
-        
-        if (submitBtn) {
-            submitBtn.disabled = !isValid;
-        }
-        
-        return isValid;
-    }
-
-    /* Handle PMM Report submission */
-    handlePmmReportSubmit(images) {
-        const date = document.getElementById('activityDate')?.value;
-        const activityType = document.querySelector('input[name="activityType"]:checked')?.value;
-        const description = document.getElementById('activityDescription')?.value.trim();
-        
-        // Validation dengan error messages
-        let hasError = false;
-        
-        if (images.length < 1) {
-            document.getElementById('imageError')?.classList.add('show');
-            hasError = true;
-        }
-        
-        if (!date) {
-            document.getElementById('dateError')?.classList.add('show');
-            hasError = true;
-        }
-        
-        if (!activityType) {
-            document.getElementById('activityTypeError')?.classList.add('show');
-            hasError = true;
-        }
-        
-        const words = description.split(/\s+/).filter(word => word.length > 0).length;
-        if (words < 1000) {
-            document.getElementById('descriptionError')?.classList.add('show');
-            hasError = true;
-        }
-        
-        if (hasError) {
-            this.showAlert('Form Tidak Lengkap', 'Mohon lengkapi semua field yang diperlukan.');
-            return;
-        }
-        
-        // Success
-        console.log('PMM Report Data:', {
-            images: images.length,
-            date,
-            activityType,
-            description,
-            wordCount: words
-        });
-        
-        this.showAlert('Laporan Terkirim!', 'Laporan PMM Anda berhasil dikirim. Database belum terhubung.');
-        
-        // Reset dan kembali ke Beranda
-        this.pmmSelectedImages = [];
-        this.showBerandaContent();
-        this.setActiveMenu('Beranda');
     }
 
     /* Reset Buat Post state */

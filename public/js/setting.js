@@ -14,8 +14,47 @@ class SettingsManager {
         this.init();
     }
 
+    /* Detect user type from storage */
+    getUserType() {
+        const userType = localStorage.getItem('userType');
+        return userType || 'peserta';
+    }
+
+    isKoordinator() {
+        return this.getUserType() === 'koordinator';
+    }
+
+    /* Get home URL based on user type */
+    getHomeUrl() {
+        const userType = this.getUserType();
+        
+        const homeUrls = {
+            'peserta': '/home',
+            'koordinator': '/koordinator',
+            'umum': '/homeumum'
+        };
+        
+        return homeUrls[userType] || '/home';
+    }
+
+    /* Get URL with menu parameter based on user type */
+    getMenuUrl(menuName) {
+        const userType = this.getUserType();
+        
+        const baseUrls = {
+            'peserta': '/home',
+            'koordinator': '/koordinator',
+            'umum': '/homeumum'
+        };
+        
+        const baseUrl = baseUrls[userType] || '/home';
+        
+        return `${baseUrl}?menu=${menuName}`;
+    }
+
     /* Initialize all components */
     init() {
+        this.renderDynamicSidebar();
         this.setupSidebarToggle();
         this.setupMenuItems();
         this.setupBioCounter();
@@ -24,6 +63,61 @@ class SettingsManager {
         this.setupLogout();
         this.handleResponsive();
         this.handleTabletView();
+    }
+
+    /* Render sidebar based on user type */
+    renderDynamicSidebar() {
+        if (!this.isKoordinator()) return;
+        
+        const menuList = document.querySelector('.menu-list');
+        if (!menuList) return;
+        
+        const koordinatorMenu = `
+            <li class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Dashboard</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span class="menu-text">Laporan Mahasiswa</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-users"></i>
+                <span class="menu-text">Data Mahasiswa</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-envelope"></i>
+                <span class="menu-text">Pesan</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span class="menu-text">Notifikasi</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-user-circle"></i>
+                <span class="menu-text">Profil</span>
+            </li>
+        `;
+        
+        menuList.innerHTML = koordinatorMenu;
+        
+        const sidebarFooter = document.querySelector('.sidebar-footer .menu-item');
+        if (sidebarFooter) {
+            sidebarFooter.classList.add('active');
+        }
+        
+        // TAMBAHKAN INI: Force visibility di mobile
+        const isMobile = window.innerWidth <= 640;
+        if (isMobile && this.leftSidebar) {
+            this.leftSidebar.style.display = 'flex';
+            this.leftSidebar.style.visibility = 'visible';
+            menuList.style.display = 'flex';
+        }
+        
+        setTimeout(() => {
+            this.setupMenuItems();
+            this.handleMobileView(); // Re-check mobile view
+        }, 100);
     }
 
     /* Setup sidebar toggle functionality */
@@ -62,30 +156,67 @@ class SettingsManager {
                 
                 console.log('Settings menu clicked:', menuText);
                 
-                // Remove active from all menu items
                 menuItems.forEach(mi => mi.classList.remove('active'));
                 item.classList.add('active');
                 
-                // Navigation logic based on menu text
-                if (menuText === 'Beranda') {
-                    window.location.href = '/home';
-                } else if (menuText === 'Profil') {
-                    window.location.href = '/profil';
-                } else if (menuText === 'Pencarian') {
-                    window.location.href = '/home?menu=pencarian';
-                } else if (menuText === 'Pesan') {
-                    window.location.href = '/home?menu=pesan';
-                } else if (menuText === 'Notifikasi') {
-                    window.location.href = '/home?menu=notifikasi';
-                } else if (menuText === 'Buat') {
-                    window.location.href = '/home?menu=buat';
-                } else if (menuText === 'Lainnya') {
-                    // Already on settings page, do nothing
+                // Jika user adalah koordinator, gunakan routing koordinator
+                if (this.isKoordinator()) {
+                    this.handleKoordinatorMenu(menuText);
                 } else {
-                    this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+                    this.handleDefaultMenu(menuText);
                 }
             });
         });
+    }
+
+    /* Handle koordinator menu navigation */
+    handleKoordinatorMenu(menuText) {
+        switch(menuText) {
+            case 'Dashboard':
+                window.location.href = '/koordinator';
+                break;
+            case 'Laporan Mahasiswa':
+                window.location.href = '/koordinator?menu=laporan';
+                break;
+            case 'Data Mahasiswa':
+                window.location.href = '/koordinator?menu=data';
+                break;
+            case 'Pesan':
+                window.location.href = '/koordinator?menu=pesan';
+                break;
+            case 'Notifikasi':
+                window.location.href = '/koordinator?menu=notifikasi';
+                break;
+            case 'Profil':
+                window.location.href = '/profil';
+                break;
+            case 'Lainnya':
+                // Already on settings page
+                break;
+            default:
+                this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+        }
+    }
+
+    /* Handle default menu navigation (peserta/umum) */
+    handleDefaultMenu(menuText) {
+        if (menuText === 'Beranda') {
+            window.location.href = this.getHomeUrl();
+        } else if (menuText === 'Profil') {
+            window.location.href = '/profil';
+        } else if (menuText === 'Pencarian') {
+            window.location.href = this.getMenuUrl('pencarian');
+        } else if (menuText === 'Pesan') {
+            window.location.href = this.getMenuUrl('pesan');
+        } else if (menuText === 'Notifikasi') {
+            window.location.href = this.getMenuUrl('notifikasi');
+        } else if (menuText === 'Buat') {
+            window.location.href = this.getMenuUrl('buat');
+        } else if (menuText === 'Lainnya') {
+            // Already on settings page
+        } else {
+            this.showAlert(`${menuText}`, 'Fitur akan tersedia setelah database terhubung.');
+        }
     }
 
     /* Setup bio character counter */
@@ -225,7 +356,10 @@ class SettingsManager {
             this.showAlert('Logout', 'Anda telah keluar dari akun');
             
             setTimeout(() => {
-                // Redirect to login page
+                // Hapus user type saat logout
+                localStorage.removeItem('userType');
+
+                // Lalu redirect
                 window.location.href = '/signin';
             }, 1000);
         }
@@ -258,9 +392,33 @@ class SettingsManager {
     /* Handle mobile view adjustments */
     handleMobileView() {
         const isMobile = window.innerWidth <= 640;
-
-        if (this.leftToggle) {
-            this.leftToggle.style.display = isMobile ? 'none' : 'flex';
+        
+        if (isMobile) {
+            // Force show sidebar di mobile
+            if (this.leftSidebar) {
+                this.leftSidebar.style.display = 'flex';
+                this.leftSidebar.style.visibility = 'visible';
+                this.leftSidebar.style.opacity = '1';
+            }
+            
+            // Hide toggle button
+            if (this.leftToggle) {
+                this.leftToggle.style.display = 'none';
+            }
+            
+            // Ensure menu list is visible
+            const menuList = document.querySelector('.menu-list');
+            if (menuList) {
+                menuList.style.display = 'flex';
+            }
+            
+            // Log untuk debugging
+            console.log('Mobile view active - sidebar should be visible');
+        } else {
+            // Desktop/tablet view
+            if (this.leftToggle) {
+                this.leftToggle.style.display = 'flex';
+            }
         }
     }
 
